@@ -98,9 +98,9 @@ export const HeroSlider = memo(function HeroSlider({
             <span>{SLIDES[currentSlide].span}</span>
           </div>
 
-          <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight uppercase leading-none text-white">
-            {SLIDES[currentSlide].title} <br />
-            <span className="text-[#3C6E71]">{SLIDES[currentSlide].highlight}</span>
+          <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight uppercase leading-[1.12] sm:leading-[1.15] text-white">
+            <span>{SLIDES[currentSlide].title}</span>
+            <span className="block mt-1 sm:mt-1.5 text-[#3C6E71]">{SLIDES[currentSlide].highlight}</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-gray-300 font-sans leading-relaxed max-w-lg">
