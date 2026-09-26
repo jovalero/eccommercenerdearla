@@ -5,14 +5,13 @@ import { PRODUCTS, BRANDS } from "../data/products";
 import ProductCard from "./ProductCard";
 import { SlidersHorizontal, Sparkles } from "lucide-react";
 
-export default function ProductCatalog({ searchQuery, catalogRef }) {
-  const [selectedBrand, setSelectedBrand] = useState("Todos");
+export default function ProductCatalog({ searchQuery, selectedBrand, setSelectedBrand, catalogRef }) {
   const [sortBy, setSortBy] = useState("featured");
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((item) => {
       const matchBrand =
-        selectedBrand === "Todos" || item.brand === selectedBrand;
+        !selectedBrand || selectedBrand === "Todos" || item.brand.toLowerCase() === selectedBrand.toLowerCase();
       const matchSearch =
         !searchQuery ||
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -33,32 +32,34 @@ export default function ProductCatalog({ searchQuery, catalogRef }) {
       if (sortBy === "price-asc") return a.price - b.price;
       if (sortBy === "price-desc") return b.price - a.price;
       if (sortBy === "rating") return b.rating - a.rating;
-      return 0; // default featured
+      return 0;
     });
   }, [selectedBrand, searchQuery, sortBy]);
 
   return (
-    <section ref={catalogRef} id="catalogo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <section ref={catalogRef} id="catalogo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 border-b border-gray-200/80 pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-holux-gold mb-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Colección Seleccionada</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-serif font-light text-holux-light">
-            Fragancias de Alta Gama &amp; Nicho
+          <span className="text-[10px] font-sans font-bold tracking-widest text-[#3C6E71] uppercase block mb-1">
+            HAUTE PARFUMERIE INTERNACIONAL
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-display font-black text-[#1C2321] uppercase tracking-tight">
+            PRODUCTOS DESTACADOS
           </h2>
+          <p className="text-xs sm:text-sm text-gray-500 font-sans mt-0.5">
+            Una selección especial recomendada por nuestros expertos en perfumería de nicho.
+          </p>
         </div>
 
         {/* Sort Selector */}
-        <div className="flex items-center gap-3">
-          <SlidersHorizontal className="w-4 h-4 text-holux-muted" />
-          <span className="text-xs text-holux-muted">Ordenar por:</span>
+        <div className="flex items-center gap-2 self-start md:self-end">
+          <SlidersHorizontal className="w-3.5 h-3.5 text-gray-500" />
+          <span className="text-xs text-gray-500 font-sans">Ordenar:</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-holux-card border border-holux-border text-holux-light text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-holux-gold"
+            className="bg-white border border-gray-200 text-[#1C2321] text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#3C6E71] font-sans shadow-2xs"
           >
             <option value="featured">Destacados Holux</option>
             <option value="price-asc">Precio: Menor a Mayor</option>
@@ -74,10 +75,10 @@ export default function ProductCatalog({ searchQuery, catalogRef }) {
           <button
             key={brand}
             onClick={() => setSelectedBrand(brand)}
-            className={`px-4 py-2 rounded-full text-xs font-medium tracking-wide whitespace-nowrap transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-display font-bold tracking-wider uppercase whitespace-nowrap transition-all ${
               selectedBrand === brand
-                ? "bg-holux-gold text-holux-black font-semibold shadow-gold-glow/30"
-                : "bg-holux-card/80 text-holux-muted hover:text-holux-light border border-holux-border/60 hover:border-holux-border"
+                ? "bg-[#1C2321] text-white shadow-xs"
+                : "bg-white text-gray-600 hover:text-black border border-gray-200/90 hover:border-gray-300"
             }`}
           >
             {brand}
@@ -87,22 +88,20 @@ export default function ProductCatalog({ searchQuery, catalogRef }) {
 
       {/* Products Grid */}
       {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-20 rounded-2xl bg-holux-card/30 border border-holux-border/40 max-w-lg mx-auto p-8">
-          <p className="text-holux-light font-serif text-lg mb-2">No se encontraron fragancias</p>
-          <p className="text-xs text-holux-muted mb-6">
+        <div className="text-center py-20 rounded-2xl bg-white border border-gray-200 max-w-lg mx-auto p-8 shadow-xs">
+          <p className="text-[#1C2321] font-display text-xl font-bold uppercase mb-2">No se encontraron fragancias</p>
+          <p className="text-xs text-gray-500 font-sans mb-6">
             Intenta con otro término de búsqueda o selecciona todas las marcas.
           </p>
           <button
-            onClick={() => {
-              setSelectedBrand("Todos");
-            }}
-            className="px-6 py-2.5 rounded-full bg-holux-gold text-holux-black text-xs font-semibold tracking-wider uppercase hover:opacity-90"
+            onClick={() => setSelectedBrand("Todos")}
+            className="px-6 py-2.5 rounded-xl bg-[#1C2321] text-white text-xs font-display font-bold tracking-wider uppercase hover:bg-neutral-800"
           >
             Ver Todo el Catálogo
           </button>

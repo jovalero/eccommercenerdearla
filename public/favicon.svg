@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#1C2826"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#3C6E71" stroke-width="2" stroke-opacity="0.6"/>
+  <!-- H letter logo -->
+  <path d="M19 16V48M45 16V48M19 32H45" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Top diamond sparkle accent -->
+  <polygon points="32,10 35,16 32,22 29,16" fill="#3C6E71"/>
+</svg>

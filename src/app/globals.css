@@ -1,17 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #141817;
-  --foreground: #F8F6F2;
+  --bg-dark: #1C2321;
+  --bg-light: #F2EFE9;
+  --teal: #3C6E71;
+  --rust: #B85C38;
+  --text-dark: #1C2321;
+  --text-light: #F2EFE9;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+.font-display {
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.font-mono-custom {
+  font-family: 'JetBrains Mono', monospace;
 }
 
 /* Custom scrollbars */
@@ -20,47 +39,19 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #141817;
+  background: var(--bg-light);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2A3632;
+  background: var(--teal);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4AF37;
+  background: #284B4D;
 }
 
-/* Luxury gold text gradient */
+/* Gold shimmer & text gradients */
 .text-gold-gradient {
-  background: linear-gradient(135deg, #FFF0B8 0%, #D4AF37 50%, #A6841E 100%);
+  background: linear-gradient(135deg, #A6841E 0%, #D4AF37 50%, #ECD88C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.text-gold-shimmer {
-  background: linear-gradient(90deg, #D4AF37 0%, #FFF4D0 50%, #D4AF37 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shine 4s linear infinite;
-}
-
-@keyframes shine {
-  to {
-    background-position: 200% center;
-  }
-}
-
-/* Glassmorphism */
-.glass-panel {
-  background: rgba(27, 35, 32, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.15);
-}
-
-.glass-card {
-  background: rgba(20, 24, 23, 0.7);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(42, 54, 50, 0.8);
 }
