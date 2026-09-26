@@ -48,30 +48,20 @@ export default function LuckyWheelModal() {
 
       const { segmentIndex, prize } = data;
 
-      // Calculate target angle:
-      // Pointer is at the top (270 deg or 0 deg depending on orientation).
-      // Each segment covers [i * 60, (i + 1) * 60].
-      // To bring segmentIndex to the top pointer:
       const segmentCenter = segmentIndex * segmentDegrees + segmentDegrees / 2;
-      // We want needle at top (which corresponds to 360 - segmentCenter in clockwise rotation)
       const targetRotation = 360 * 6 + (360 - segmentCenter);
 
-      // Accumulate with previous rotation
       const newAngle = rotationAngle + targetRotation;
       setRotationAngle(newAngle);
 
-      // Consume 1 spin
       consumeSpin();
 
-      // Wait for spin animation duration (5.5 seconds)
       setTimeout(() => {
         setSpinning(false);
         setWonPrize(prize);
 
-        // Confetti explosion
         triggerCelebration();
 
-        // Process prize
         if (prize.type === "points") {
           addVipPoints(prize.points);
         } else if (prize.coupon) {
@@ -90,24 +80,23 @@ export default function LuckyWheelModal() {
   };
 
   const triggerCelebration = () => {
-    // Luxury gold & emerald confetti
     confetti({
-      particleCount: 80,
-      spread: 70,
+      particleCount: 90,
+      spread: 75,
       origin: { y: 0.6 },
       colors: ["#D4AF37", "#3C6E71", "#ECD88C", "#B85C38", "#FFFFFF"],
     });
 
     setTimeout(() => {
       confetti({
-        particleCount: 50,
+        particleCount: 60,
         angle: 60,
         spread: 55,
         origin: { x: 0 },
         colors: ["#D4AF37", "#ECD88C", "#3C6E71"],
       });
       confetti({
-        particleCount: 50,
+        particleCount: 60,
         angle: 120,
         spread: 55,
         origin: { x: 1 },
@@ -134,43 +123,43 @@ export default function LuckyWheelModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto bg-holux-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-holux-card border border-holux-gold/40 rounded-3xl p-6 sm:p-8 shadow-modal text-center my-auto overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto bg-black/85 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-xl bg-[#1C2321] text-white border border-[#3C6E71]/40 rounded-3xl p-6 sm:p-8 shadow-2xl text-center my-auto overflow-hidden">
         {/* Background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-holux-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#3C6E71]/15 rounded-full blur-3xl pointer-events-none"></div>
 
         {/* Close Button */}
         <button
           onClick={() => !spinning && setIsWheelOpen(false)}
           disabled={spinning}
-          className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-holux-dark/70 hover:bg-holux-dark text-holux-muted hover:text-white border border-holux-border transition-colors disabled:opacity-30"
+          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/10 transition-colors disabled:opacity-30 cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-holux-cardHover border border-holux-gold/30 text-xs font-semibold uppercase tracking-widest text-holux-gold mb-3">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-[#D4AF37]/40 text-xs font-display font-bold uppercase tracking-widest text-[#ECD88C] mb-3">
+          <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
           <span>Ruleta de la Fortuna Holux</span>
         </div>
 
-        <h2 className="text-2xl sm:text-3xl font-serif text-holux-light font-medium">
+        <h2 className="text-2xl sm:text-3xl font-display font-black text-white uppercase tracking-tight">
           Girá y Ganá Premios Exclusivos
         </h2>
-        <p className="text-xs text-holux-muted mt-1 max-w-sm mx-auto">
-          Obtén hasta un 25% de descuento, envíos sin cargo o muestras de alta perfumería para tu próximo pedido.
+        <p className="text-xs text-gray-300 font-sans mt-1 max-w-sm mx-auto">
+          Obtén hasta un 25% de descuento, envíos bonificados o muestras de alta perfumería para tu próximo pedido.
         </p>
 
-        {/* Wheel Canvas / SVG Container */}
-        <div className="relative my-8 flex items-center justify-center">
+        {/* Wheel SVG Disk Container */}
+        <div className="relative my-7 flex items-center justify-center">
           {/* Top Indicator Needle */}
           <div className="absolute -top-3 z-30 flex flex-col items-center pointer-events-none">
-            <div className="w-5 h-7 bg-gradient-to-b from-holux-goldLight via-holux-gold to-holux-goldDark shadow-gold-glow clip-triangle transform rotate-180"></div>
-            <div className="w-3 h-3 rounded-full bg-holux-gold border-2 border-holux-dark -mt-1 shadow-md"></div>
+            <div className="w-5 h-7 bg-gradient-to-b from-[#ECD88C] via-[#D4AF37] to-[#A6841E] shadow-lg clip-triangle transform rotate-180"></div>
+            <div className="w-3 h-3 rounded-full bg-[#D4AF37] border-2 border-[#1C2321] -mt-1 shadow-md"></div>
           </div>
 
           {/* Golden Outer Bezel */}
-          <div className="p-3 rounded-full bg-gradient-to-tr from-holux-goldDark via-holux-goldLight to-holux-gold shadow-gold-glow/40 border border-holux-gold/50">
+          <div className="p-3 rounded-full bg-gradient-to-tr from-[#A6841E] via-[#ECD88C] to-[#D4AF37] shadow-xl border border-[#D4AF37]/50">
             {/* Inner Wheel Disk */}
             <div
               ref={wheelRef}
@@ -178,9 +167,8 @@ export default function LuckyWheelModal() {
                 transform: `rotate(${rotationAngle}deg)`,
                 transition: spinning ? "transform 5.5s cubic-bezier(0.12, 0.98, 0.28, 1)" : "none",
               }}
-              className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-inner border-2 border-holux-black/40"
+              className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-inner border-2 border-black/50"
             >
-              {/* Render SVG Wheel Segments */}
               <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
                 {PRIZE_SEGMENTS.map((segment, index) => {
                   const startAngle = index * 60;
@@ -200,7 +188,7 @@ export default function LuckyWheelModal() {
                       <path
                         d={pathData}
                         fill={segment.color}
-                        stroke="#141817"
+                        stroke="#1C2321"
                         strokeWidth="0.8"
                       />
                     </g>
@@ -210,21 +198,19 @@ export default function LuckyWheelModal() {
 
               {/* Segment Labels Overlay */}
               {PRIZE_SEGMENTS.map((segment, index) => {
-                const angle = index * 60 + 30; // Midpoint
+                const angle = index * 60 + 30;
                 return (
                   <div
                     key={segment.id}
                     className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                    style={{
-                      transform: `rotate(${angle}deg)`,
-                    }}
+                    style={{ transform: `rotate(${angle}deg)` }}
                   >
                     <div
                       className="text-center font-sans tracking-tight -translate-y-20 sm:-translate-y-24"
                       style={{ color: segment.textColor }}
                     >
                       <div className="text-base sm:text-lg leading-none mb-0.5">{segment.icon}</div>
-                      <div className="text-[11px] sm:text-xs font-bold leading-tight drop-shadow-sm uppercase">
+                      <div className="text-[11px] sm:text-xs font-display font-black leading-tight drop-shadow-sm uppercase">
                         {segment.label}
                       </div>
                       <div className="text-[9px] sm:text-[10px] opacity-80 leading-none">
@@ -235,31 +221,31 @@ export default function LuckyWheelModal() {
                 );
               })}
 
-              {/* Center Wheel Hub */}
-              <div className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-gradient-to-tr from-holux-dark via-holux-card to-holux-dark border-2 border-holux-gold shadow-md flex items-center justify-center pointer-events-none">
-                <span className="text-holux-gold font-serif font-bold text-sm">HOLUX</span>
+              {/* Center Wheel Hub with clean Holux emblem */}
+              <div className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-[#1C2321] border-2 border-[#D4AF37] shadow-md flex items-center justify-center pointer-events-none p-2">
+                <img src="/holuxlogo.png" alt="HOLUX" className="h-6 w-auto object-contain brightness-0 invert" />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Won Prize Celebration Card */}
+        {/* Won Prize Card */}
         {wonPrize ? (
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-holux-cardHover to-holux-dark border border-holux-gold/60 shadow-gold-glow/20 animate-in zoom-in-95 duration-300">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white/10 border border-[#D4AF37]/70 shadow-lg animate-in zoom-in-95 duration-300">
             <div className="text-2xl mb-1">{wonPrize.icon}</div>
-            <h3 className="text-lg sm:text-xl font-serif text-holux-gold font-semibold">
+            <h3 className="text-lg sm:text-xl font-display font-black text-[#ECD88C] uppercase tracking-wide">
               ¡Felicitaciones! Has ganado: {wonPrize.label}
             </h3>
-            <p className="text-xs text-holux-cream mt-1">{wonPrize.description}</p>
+            <p className="text-xs text-gray-200 font-sans mt-1">{wonPrize.description}</p>
 
             {wonPrize.coupon && (
               <div className="mt-3 flex items-center justify-center gap-2">
-                <span className="px-3 py-1.5 rounded-lg bg-holux-black border border-holux-gold/40 text-sm font-mono font-bold text-holux-gold tracking-wider">
+                <span className="px-3 py-1.5 rounded-lg bg-black border border-[#D4AF37]/50 text-sm font-mono font-bold text-[#ECD88C] tracking-wider">
                   {wonPrize.coupon}
                 </span>
                 <button
                   onClick={handleCopyCode}
-                  className="p-1.5 rounded-lg bg-holux-cardHover hover:bg-holux-card text-holux-light border border-holux-border hover:border-holux-gold"
+                  className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors"
                   title="Copiar código"
                 >
                   {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -271,14 +257,14 @@ export default function LuckyWheelModal() {
               {wonPrize.coupon && (
                 <button
                   onClick={handleApplyNow}
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-holux-goldDark to-holux-gold text-holux-black font-semibold text-xs uppercase tracking-wider shadow-sm hover:opacity-95"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-[#3C6E71] hover:bg-[#284B4D] text-white font-display font-bold text-xs uppercase tracking-wider shadow-sm transition-all"
                 >
                   Aplicar al Carrito Ahora
                 </button>
               )}
               <button
                 onClick={() => setIsWheelOpen(false)}
-                className="py-2.5 px-4 rounded-xl bg-holux-cardHover text-holux-cream border border-holux-border hover:border-holux-gold text-xs font-medium"
+                className="py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-sans font-medium transition-all"
               >
                 Cerrar y Seguir Comprando
               </button>
@@ -290,15 +276,15 @@ export default function LuckyWheelModal() {
             <button
               onClick={handleSpin}
               disabled={spinning || spinsLeft <= 0}
-              className="w-full sm:w-64 py-3.5 px-6 rounded-full bg-gradient-to-r from-holux-goldDark via-holux-gold to-holux-goldDark text-holux-black font-semibold text-sm tracking-wider uppercase shadow-gold-glow hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-64 py-3.5 px-6 rounded-full bg-[#B85C38] hover:bg-[#a04e2e] text-white font-display font-bold text-sm tracking-wider uppercase shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/20"
             >
               <Sparkles className="w-4 h-4" />
-              <span>{spinning ? "Girando Ruleta..." : "¡Girar Ruleta!"}</span>
+              <span>{spinning ? "Girando Ruleta..." : "¡GIRAR RULETA!"}</span>
             </button>
 
-            <span className="text-xs text-holux-muted">
+            <span className="text-xs text-gray-400 font-sans">
               {spinsLeft > 0 ? (
-                <>Te quedan <strong className="text-holux-gold">{spinsLeft} giros</strong> disponibles hoy</>
+                <>Te quedan <strong className="text-[#ECD88C] font-mono">{spinsLeft} giros</strong> disponibles hoy</>
               ) : (
                 <>Has agotado tus giros por hoy. Vuelve mañana para más premios.</>
               )}
