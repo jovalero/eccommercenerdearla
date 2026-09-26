@@ -2,7 +2,7 @@
 
 import React, { useState, memo } from "react";
 import Image from "next/image";
-import { Heart, Star, Zap, Eye, Check, Sparkles } from "lucide-react";
+import { Heart, Star, Zap, Eye, Sparkles } from "lucide-react";
 import { useShop } from "../context/ShopContext";
 
 export const ProductCard = memo(function ProductCard({ product }) {
@@ -11,7 +11,7 @@ export const ProductCard = memo(function ProductCard({ product }) {
   const [isAdded, setIsAdded] = useState(false);
 
   const price = Number(product.price) || 0;
-  const originalPrice = Math.round(price * 1.15); // simulated regular price with 15% discount
+  const originalPrice = Math.round(price * 1.15);
   const discount = 15;
   const installments = product.installments || 6;
   const installmentAmount = Math.round(price / installments);
@@ -27,13 +27,6 @@ export const ProductCard = memo(function ProductCard({ product }) {
     }, 400);
   };
 
-  const handleQuickAdd = (e) => {
-    e.stopPropagation();
-    addToCart(product, 1);
-    setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 1200);
-  };
-
   return (
     <div className="group bg-white border border-gray-200/90 rounded-xl sm:rounded-2xl overflow-hidden flex flex-col justify-between hover:shadow-xl hover:border-gray-300 transition-all duration-300 relative text-left h-full">
       {/* 1. Imagen del producto (Uniforme aspect-[4/5] con fondo neutro) */}
@@ -41,20 +34,14 @@ export const ProductCard = memo(function ProductCard({ product }) {
         onClick={() => setSelectedProduct(product)}
         className="relative bg-[#F8F7F5] aspect-[4/5] w-full overflow-hidden border-b border-gray-100 group-hover:bg-[#F2EFE9]/60 transition-colors cursor-pointer flex items-center justify-center p-4"
       >
-        {/* Discount Badge */}
+        {/* Discount Badge (Solo en la esquina superior izquierda, sin superposiciones) */}
         {discount > 0 && (
           <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-[#3C6E71] text-white text-[10px] sm:text-[11px] font-sans font-semibold tracking-wider px-2.5 py-0.5 rounded-full shadow-xs z-10 select-none border border-white/10">
             {discount}% OFF
           </span>
         )}
 
-        {/* VIP Points Chip */}
-        <span className="absolute top-2.5 left-20 sm:top-3 sm:left-22 bg-[#1C2321]/90 backdrop-blur-xs text-[#ECD88C] text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full shadow-xs z-10 flex items-center gap-1">
-          <Sparkles className="w-2.5 h-2.5 text-[#D4AF37]" />
-          +{product.pointsReward} pts
-        </span>
-
-        {/* Botón de Favoritos */}
+        {/* Botón de Favoritos (Esquina superior derecha) */}
         <button
           type="button"
           onClick={(e) => {
@@ -134,12 +121,20 @@ export const ProductCard = memo(function ProductCard({ product }) {
 
         {/* 3. Precio e Información Fiscal */}
         <div className="space-y-1.5 pt-1.5 border-t border-gray-100">
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-sm sm:text-lg md:text-xl font-black text-gray-950 font-sans tracking-tight">
-              ${Math.round(price).toLocaleString("es-AR")}
-            </span>
-            <span className="text-[10px] sm:text-xs text-gray-400 line-through font-sans">
-              ${Math.round(originalPrice).toLocaleString("es-AR")}
+          <div className="flex items-baseline justify-between gap-1 flex-wrap">
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm sm:text-lg md:text-xl font-black text-gray-950 font-sans tracking-tight">
+                ${Math.round(price).toLocaleString("es-AR")}
+              </span>
+              <span className="text-[10px] sm:text-xs text-gray-400 line-through font-sans">
+                ${Math.round(originalPrice).toLocaleString("es-AR")}
+              </span>
+            </div>
+
+            {/* VIP Points Pill ordenado junto al precio */}
+            <span className="bg-[#1C2321] text-[#ECD88C] text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full flex items-center gap-1 shadow-2xs">
+              <Sparkles className="w-2.5 h-2.5 text-[#D4AF37]" />
+              +{product.pointsReward} pts
             </span>
           </div>
 
