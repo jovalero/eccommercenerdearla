@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import { useShop } from '../context/ShopContext';
 
 export default function Footer() {
+  const { setIsRewardsOpen } = useShop();
   const [subscribed, setSubscribed] = useState(false);
   const [email, setEmail] = useState("");
 
@@ -107,7 +110,15 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="pt-2 border-t border-[#3C6E71]/20">
+            <div className="pt-2 border-t border-[#3C6E71]/20 flex flex-col gap-1.5">
+              <button
+                type="button"
+                onClick={() => setIsRewardsOpen(true)}
+                className="text-xs font-bold text-[#ECD88C] hover:text-white flex items-center gap-1 cursor-pointer transition-colors text-left"
+              >
+                <span>🎁 Catálogo de Premios VIP Canjeables</span>
+                <span className="text-amber-400">→</span>
+              </button>
               <span className="text-[10px] text-gray-400 font-sans block">
                 Optimizado para Webflow Cloud &bull; Nerdearla 2026 Showcase
               </span>
@@ -119,7 +130,9 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-gray-400 font-sans">
           <p>© {new Date().getFullYear()} HOLUX Parfumerie. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4">
-            <span>6 Cuotas Sin Interés</span>
+            <Link href="/admin" className="text-gray-400 hover:text-[#3C6E71] font-bold transition-colors">
+              Panel Admin
+            </Link>
             <span>•</span>
             <span>100% Originales</span>
             <span>•</span>

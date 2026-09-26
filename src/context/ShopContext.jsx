@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import confetti from "canvas-confetti";
 import { calculateDiscount } from "../utils/formatters";
 
 const ShopContext = createContext();
@@ -22,6 +23,75 @@ const DEFAULT_COUPONS = [
   },
 ];
 
+const DEFAULT_INITIAL_ORDERS = [
+  {
+    id: "HLX-94821",
+    date: new Date(Date.now() - 3600000 * 2.5).toISOString(),
+    customer: {
+      fullName: "Santiago Gómez",
+      email: "santiago.gomez@gmail.com",
+      phone: "+54 9 11 4452-9810",
+      address: "Av. Del Libertador 2450, Piso 6B",
+      city: "CABA",
+      zipCode: "C1425",
+    },
+    items: [
+      {
+        name: "Naxos 1861",
+        brand: "Xerjoff",
+        price: 425000,
+        quantity: 1,
+        image: "/uploads/19ce47fa-b481-4bc7-b1c7-374b4afe2afc.jpg",
+      },
+      {
+        name: "Vial Decant 2ml - Tom Ford Ombré Leather (Regalo VIP)",
+        brand: "Tom Ford",
+        price: 0,
+        quantity: 1,
+        isGift: true,
+        image: "/uploads/ff1a23de-ee09-4ad6-80f8-25da1e29370a.jpg",
+      },
+    ],
+    subtotal: 425000,
+    discountAmount: 63750,
+    shippingCost: 0,
+    total: 361250,
+    paymentMethod: "Transferencia Bancaria",
+    receiptImage: "/uploads/19ce47fa-b481-4bc7-b1c7-374b4afe2afc.jpg", // initial preview sample
+    status: "Pendiente",
+    bankReference: "TR-Santander-9921",
+  },
+  {
+    id: "HLX-81204",
+    date: new Date(Date.now() - 3600000 * 24).toISOString(),
+    customer: {
+      fullName: "Mariana Soria",
+      email: "mariana.soria@hotmail.com",
+      phone: "+54 9 341 512-7788",
+      address: "Bv. Oroño 1120",
+      city: "Rosario",
+      zipCode: "S2000",
+    },
+    items: [
+      {
+        name: "Soleil Blanc",
+        brand: "Tom Ford",
+        price: 490000,
+        quantity: 1,
+        image: "/uploads/c0f82ff9-759d-484b-a47c-1186bbb54537.jpg",
+      },
+    ],
+    subtotal: 490000,
+    discountAmount: 73500,
+    shippingCost: 0,
+    total: 416500,
+    paymentMethod: "Transferencia Bancaria",
+    receiptImage: "/uploads/c0f82ff9-759d-484b-a47c-1186bbb54537.jpg",
+    status: "Aprobado",
+    bankReference: "TR-Galicia-4412",
+  },
+];
+
 export function ShopProvider({ children }) {
   // Cart state
   const [cart, setCart] = useState([]);
@@ -30,14 +100,18 @@ export function ShopProvider({ children }) {
   const [couponLoading, setCouponLoading] = useState(false);
 
   // VIP & Gamification state
-  const [vipPoints, setVipPoints] = useState(1250);
+  const [vipPoints, setVipPoints] = useState(22500);
   const [unlockedCoupons, setUnlockedCoupons] = useState(DEFAULT_COUPONS);
   const [spinsLeft, setSpinsLeft] = useState(3);
+
+  // Orders list state for Admin
+  const [orders, setOrders] = useState(DEFAULT_INITIAL_ORDERS);
 
   // Modals state
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWheelOpen, setIsWheelOpen] = useState(false);
   const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -58,6 +132,9 @@ export function ShopProvider({ children }) {
 
       const savedSpins = localStorage.getItem("holux_spins_left");
       if (savedSpins) setSpinsLeft(Number(savedSpins));
+
+      const savedOrders = localStorage.getItem("holux_orders");
+      if (savedOrders) setOrders(JSON.parse(savedOrders));
     } catch (e) {
       console.error("Error loading localStorage", e);
     }
@@ -87,6 +164,12 @@ export function ShopProvider({ children }) {
       localStorage.setItem("holux_spins_left", spinsLeft.toString());
     } catch (e) {}
   }, [spinsLeft]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("holux_orders", JSON.stringify(orders));
+    } catch (e) {}
+  }, [orders]);
 
   // Toast helper
   const showToast = (message, type = "success") => {
@@ -136,7 +219,7 @@ export function ShopProvider({ children }) {
   // Calculations
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = cart.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
+    (acc, item) => acc + (Number(item.product.price) || 0) * item.quantity,
     0
   );
 
@@ -207,6 +290,66 @@ export function ShopProvider({ children }) {
     setSpinsLeft((prev) => Math.max(0, prev - 1));
   };
 
+  // Redeem Rewards by VIP Points
+  const redeemReward = (reward) => {
+    if (vipPoints < reward.pointsCost) {
+      showToast(
+        `Te faltan ${(reward.pointsCost - vipPoints).toLocaleString()} pts para canjear este premio`,
+        "error"
+      );
+      return false;
+    }
+
+    setVipPoints((prev) => Math.max(0, prev - reward.pointsCost));
+
+    if (reward.type === "gift_cart" && reward.giftProduct) {
+      addToCart(reward.giftProduct, 1);
+      showToast(`¡"${reward.giftProduct.name}" agregado a tu carrito a $0!`, "success");
+    } else if (reward.type === "coupon") {
+      unlockCoupon({
+        code: reward.couponCode,
+        description: reward.couponDiscount,
+        type: reward.couponCode.includes("25") ? "percentage" : "fixed",
+        value: reward.couponCode.includes("25") ? 25 : (reward.couponCode.includes("15K") ? 15000 : 8500),
+        source: "Premio Canjeado",
+      });
+      showToast(`¡Cupón ${reward.couponCode} desbloqueado en tu monedero!`, "success");
+    } else if (reward.type === "spin") {
+      setSpinsLeft((prev) => prev + 1);
+      showToast(`¡+1 Giro adicional agregado a tu Ruleta VIP!`, "success");
+    }
+
+    try {
+      confetti({
+        particleCount: 80,
+        spread: 75,
+        origin: { y: 0.6 },
+        colors: ["#3C6E71", "#B85C38", "#1C2321", "#D4AF37"],
+      });
+    } catch (e) {}
+
+    return true;
+  };
+
+  // Orders creation and management
+  const createOrder = (orderData) => {
+    const newOrder = {
+      id: orderData.id || `HLX-${Math.floor(10000 + Math.random() * 90000)}`,
+      date: new Date().toISOString(),
+      status: "Pendiente",
+      ...orderData,
+    };
+    setOrders((prev) => [newOrder, ...prev]);
+    return newOrder;
+  };
+
+  const updateOrderStatus = (orderId, newStatus) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+    );
+    showToast(`Pedido ${orderId} marcado como "${newStatus}"`, "info");
+  };
+
   return (
     <ShopContext.Provider
       value={{
@@ -234,6 +377,11 @@ export function ShopProvider({ children }) {
         unlockCoupon,
         spinsLeft,
         consumeSpin,
+        redeemReward,
+
+        orders,
+        createOrder,
+        updateOrderStatus,
 
         isCartOpen,
         setIsCartOpen,
@@ -241,6 +389,8 @@ export function ShopProvider({ children }) {
         setIsWheelOpen,
         isWalletOpen,
         setIsWalletOpen,
+        isRewardsOpen,
+        setIsRewardsOpen,
         isCheckoutOpen,
         setIsCheckoutOpen,
         selectedProduct,

@@ -3,6 +3,7 @@ import { ShopProvider } from "../context/ShopContext";
 import CartDrawer from "../components/CartDrawer";
 import LuckyWheelModal from "../components/LuckyWheelModal";
 import CouponWalletModal from "../components/CouponWalletModal";
+import RewardsModal from "../components/RewardsModal";
 import ProductDetailModal from "../components/ProductDetailModal";
 import CheckoutModal from "../components/CheckoutModal";
 import ToastNotification from "../components/ToastNotification";
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
           <CartDrawer />
           <LuckyWheelModal />
           <CouponWalletModal />
+          <RewardsModal />
           <ProductDetailModal />
           <CheckoutModal />
           <ToastNotification />

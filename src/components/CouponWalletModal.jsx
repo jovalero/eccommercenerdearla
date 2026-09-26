@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import { useShop } from "../context/ShopContext";
-import { X, Award, Copy, Check, Sparkles, Tag, ShieldCheck } from "lucide-react";
+import { X, Award, Copy, Check, Sparkles, Tag, ShieldCheck, Gift } from "lucide-react";
 
 export default function CouponWalletModal() {
   const {
     isWalletOpen,
     setIsWalletOpen,
+    setIsRewardsOpen,
     vipPoints,
     unlockedCoupons,
     applyCoupon,
@@ -97,16 +98,31 @@ export default function CouponWalletModal() {
               </div>
             </div>
 
-            <button
-              onClick={() => {
-                setIsWalletOpen(false);
-                setIsWheelOpen(true);
-              }}
-              className="text-xs font-sans font-bold text-[#1C2321] bg-[#F2EFE9] hover:bg-white flex items-center gap-1.5 py-2 px-3.5 rounded-xl transition-all shadow-xs cursor-pointer active:scale-95"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#B85C38]" />
-              <span>Girar Ruleta ({spinsLeft})</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsWalletOpen(false);
+                  setIsRewardsOpen(true);
+                }}
+                className="text-xs font-sans font-bold text-white bg-[#3C6E71] hover:bg-[#284B4D] flex items-center gap-1.5 py-2 px-3 sm:px-3.5 rounded-xl transition-all shadow-xs cursor-pointer active:scale-95"
+              >
+                <Gift className="w-3.5 h-3.5 text-white" />
+                <span>Premios VIP</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsWalletOpen(false);
+                  setIsWheelOpen(true);
+                }}
+                className="text-xs font-sans font-bold text-[#1C2321] bg-[#F2EFE9] hover:bg-white flex items-center gap-1.5 py-2 px-3 sm:px-3.5 rounded-xl transition-all shadow-xs cursor-pointer active:scale-95"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#B85C38]" />
+                <span>Ruleta ({spinsLeft})</span>
+              </button>
+            </div>
           </div>
         </div>
 
