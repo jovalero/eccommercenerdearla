@@ -1,17 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { useShop } from "../context/ShopContext";
 import {
   ShoppingBag,
   Search,
-  Heart,
   Award,
   Sparkles,
   Menu,
   X,
-  ChevronDown
 } from "lucide-react";
 
 export default function Header({ searchQuery, setSearchQuery, onSelectCategory }) {
@@ -26,55 +23,40 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const categories = [
-    { label: "TODOS", value: "Todos" },
-    { label: "PERFUMES HOMBRE", value: "hombre" },
-    { label: "PERFUMES MUJER", value: "mujer" },
-    { label: "NICHO & AUTOR", value: "nicho" },
-  ];
-
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#F2EFE9] border-b border-[#1C2321]/15 text-[#1C2321] transition-all shadow-xs">
+    <header className="bg-[#1C2321] text-white border-b border-[#3C6E71]/20 shadow-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
           
-          {/* Mobile Menu Trigger & Logo */}
+          {/* Left area: Mobile Menu Trigger + Clean Authentic Logo */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-[#1C2321]/5 text-[#1C2321]"
-              aria-label="Menú"
+              className="lg:hidden p-1.5 rounded-lg hover:bg-white/10 text-white transition-colors"
+              aria-label="Abrir menú"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 text-[#F2EFE9]" /> : <Menu className="w-5 h-5 text-[#F2EFE9]" />}
             </button>
 
-            <a href="#" className="flex items-center gap-2.5 group select-none">
-              <div className="relative w-10 h-10 rounded-full border border-[#1C2321]/20 flex items-center justify-center bg-white overflow-hidden shadow-xs">
-                <Image
-                  src="/holuxlogo.png"
-                  alt="HOLUX Logo"
-                  width={34}
-                  height={34}
-                  className="object-contain"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                <span className="text-[#1C2321] font-display font-black text-xl">H</span>
-              </div>
-              <div className="leading-none">
-                <span className="font-display font-black text-2xl tracking-wider text-[#1C2321] group-hover:text-[#3C6E71] transition-colors uppercase">
+            <a href="#" className="flex items-center gap-3 select-none group">
+              <img
+                src="/holuxlogo.png"
+                alt="HOLUX"
+                className="h-8 sm:h-9 md:h-10 w-auto object-contain brightness-0 invert shrink-0"
+              />
+              <div className="flex flex-col text-left leading-none">
+                <span className="font-display font-black text-xl sm:text-2xl tracking-wider text-white group-hover:text-[#3C6E71] transition-colors uppercase">
                   HOLUX
                 </span>
-                <span className="block text-[9px] font-sans font-bold tracking-[0.2em] text-[#3C6E71] uppercase">
+                <span className="text-[9px] font-sans font-bold tracking-[0.22em] text-[#3C6E71] uppercase mt-0.5">
                   Haute Parfumerie
                 </span>
               </div>
             </a>
           </div>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-display font-bold uppercase tracking-wider text-[#1C2321]">
+          {/* Center Navigation Links (Original Holux Style) */}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-display font-bold uppercase tracking-wider text-gray-200">
             <a
               href="#catalogo"
               onClick={() => onSelectCategory && onSelectCategory("Todos")}
@@ -104,7 +86,7 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
             {/* Special Lucky Wheel Tab */}
             <button
               onClick={() => setIsWheelOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#B85C38] text-white hover:bg-[#a04e2e] shadow-sm hover:scale-105 transition-all text-xs font-bold"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#B85C38] text-white hover:bg-[#a04e2e] shadow-sm hover:scale-105 transition-all text-xs font-bold"
             >
               <Sparkles className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} />
               <span>RULETA VIP 🎡</span>
@@ -119,13 +101,13 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
                 placeholder="Buscar fragancias, notas o marcas..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-[#1C2321]/20 rounded-full pl-9 pr-4 py-2 text-xs text-[#1C2321] placeholder-gray-500 outline-none focus:border-[#3C6E71] focus:ring-1 focus:ring-[#3C6E71]/30 transition-all font-sans"
+                className="w-full bg-white/10 border border-[#3C6E71]/40 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-gray-400 outline-none focus:border-[#3C6E71] focus:ring-1 focus:ring-[#3C6E71]/40 transition-all font-sans"
               />
               <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5" />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-2 text-xs text-gray-400 hover:text-gray-700"
+                  className="absolute right-3 top-2 text-xs text-gray-400 hover:text-white"
                 >
                   ✕
                 </button>
@@ -138,26 +120,26 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
             {/* VIP Club Monedero */}
             <button
               onClick={() => setIsWalletOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-[#1C2321]/15 hover:border-[#D4AF37] text-xs font-sans font-semibold text-[#1C2321] transition-all shadow-xs group"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 hover:border-[#D4AF37] text-xs font-sans font-semibold text-white transition-all shadow-xs group"
               title="Monedero VIP Club"
             >
               <Award className="w-4 h-4 text-[#D4AF37] group-hover:scale-110 transition-transform" />
               <div className="text-left hidden sm:block leading-tight">
-                <span className="text-[9px] block text-gray-500 uppercase font-sans">Club VIP</span>
-                <span className="font-bold font-mono text-[#1C2321]">{vipPoints.toLocaleString()} pts</span>
+                <span className="text-[9px] block text-gray-400 uppercase font-sans">Club VIP</span>
+                <span className="font-bold font-mono text-[#ECD88C]">{vipPoints.toLocaleString()} pts</span>
               </div>
-              <span className="sm:hidden font-mono font-bold text-xs">{vipPoints.toLocaleString()}</span>
+              <span className="sm:hidden font-mono font-bold text-xs text-[#ECD88C]">{vipPoints.toLocaleString()}</span>
             </button>
 
             {/* Cart Drawer Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2.5 rounded-full bg-[#1C2321] text-white hover:bg-neutral-800 transition-all shadow-xs cursor-pointer"
+              className="relative p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all shadow-xs cursor-pointer border border-white/10"
               aria-label="Ver Carrito de compras"
             >
-              <ShoppingBag className="w-5 h-5" />
+              <ShoppingBag className="w-5 h-5 text-[#F2EFE9]" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-[#B85C38] text-white text-[10px] font-bold font-mono flex items-center justify-center animate-bounce border-2 border-white">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-[#B85C38] text-white text-[10px] font-bold font-mono flex items-center justify-center animate-bounce border-2 border-[#1C2321]">
                   {cartCount}
                 </span>
               )}
@@ -173,7 +155,7 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
               placeholder="Buscar fragancias, notas o marcas..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-[#1C2321]/20 rounded-full pl-9 pr-4 py-2 text-xs text-[#1C2321] placeholder-gray-500 outline-none focus:border-[#3C6E71] font-sans"
+              className="w-full bg-white/10 border border-[#3C6E71]/40 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-gray-400 outline-none focus:border-[#3C6E71] font-sans"
             />
             <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5" />
           </div>
@@ -181,14 +163,14 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
 
         {/* Mobile Dropdown Navigation */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-[#1C2321]/10 space-y-2 font-display text-sm font-bold uppercase tracking-wider">
+          <div className="lg:hidden py-4 border-t border-white/10 space-y-2 font-display text-sm font-bold uppercase tracking-wider">
             <a
               href="#catalogo"
               onClick={() => {
                 onSelectCategory && onSelectCategory("Todos");
                 setMobileMenuOpen(false);
               }}
-              className="block px-3 py-2 rounded-lg hover:bg-[#1C2321]/5"
+              className="block px-3 py-2 rounded-lg hover:bg-white/10"
             >
               Catálogo Completo
             </a>
@@ -197,7 +179,7 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
                 onSelectCategory && onSelectCategory("Xerjoff");
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#1C2321]/5 uppercase"
+              className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
               Xerjoff Niche
             </button>
@@ -206,7 +188,7 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
                 onSelectCategory && onSelectCategory("Tom Ford");
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#1C2321]/5 uppercase"
+              className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
               Tom Ford
             </button>

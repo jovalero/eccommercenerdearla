@@ -27,15 +27,18 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F2EFE9] text-[#1C2321]">
-      {/* 1. Interactive Marquee Ticker */}
-      <InteractiveTicker />
+      {/* Sticky top wrapper containing both the ticker and the header */}
+      <div className="sticky top-0 z-40 flex flex-col">
+        {/* 1. Interactive Marquee Ticker */}
+        <InteractiveTicker />
 
-      {/* 2. Brand Header & Navbar */}
-      <Header
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onSelectCategory={handleSelectBrand}
-      />
+        {/* 2. Brand Header & Navbar */}
+        <Header
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onSelectCategory={handleSelectBrand}
+        />
+      </div>
 
       {/* 3. Hero Editorial Slider */}
       <HeroSlider
