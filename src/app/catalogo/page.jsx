@@ -44,8 +44,11 @@ function CatalogContent() {
   const [gridCols, setGridCols] = useState(3); // 3 or 4 columns on large screens
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
-  // Sync with searchParams if they change
+  // Sync with searchParams if they change & always start at top of page
   useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    } catch {}
     const brand = searchParams.get("marca") || searchParams.get("brand");
     if (brand) setSelectedBrand(brand);
     const genero = searchParams.get("genero") || searchParams.get("gender");

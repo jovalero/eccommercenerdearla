@@ -81,21 +81,18 @@ export default function Header({ searchQuery = "", setSearchQuery, onSelectCateg
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-display font-bold uppercase tracking-wider text-gray-200">
             <Link
               href="/catalogo"
-              onClick={() => onSelectCategory && onSelectCategory("Todos")}
               className="hover:text-[#3C6E71] transition-colors py-2"
             >
               CATÁLOGO
             </Link>
             <Link
               href="/catalogo?genero=Hombre"
-              onClick={() => onSelectCategory && onSelectCategory("Hombre")}
               className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
             >
               HOMBRE
             </Link>
             <Link
               href="/catalogo?genero=Mujer"
-              onClick={() => onSelectCategory && onSelectCategory("Mujer")}
               className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
             >
               MUJER
@@ -188,30 +185,21 @@ export default function Header({ searchQuery = "", setSearchQuery, onSelectCateg
           <div className="lg:hidden py-4 border-t border-white/10 space-y-2 font-display text-sm font-bold uppercase tracking-wider">
             <Link
               href="/catalogo"
-              onClick={() => {
-                onSelectCategory && onSelectCategory("Todos");
-                setMobileMenuOpen(false);
-              }}
+              onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 rounded-lg hover:bg-white/10"
             >
               Catálogo
             </Link>
             <Link
               href="/catalogo?genero=Hombre"
-              onClick={() => {
-                onSelectCategory && onSelectCategory("Hombre");
-                setMobileMenuOpen(false);
-              }}
+              onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
               Hombre
             </Link>
             <Link
               href="/catalogo?genero=Mujer"
-              onClick={() => {
-                onSelectCategory && onSelectCategory("Mujer");
-                setMobileMenuOpen(false);
-              }}
+              onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
               Mujer
