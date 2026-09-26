@@ -8,11 +8,11 @@ export default function PromoBanner() {
   const { setIsWheelOpen, spinsLeft } = useShop();
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* 1. Trust Pillars */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-10">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-8 sm:pb-10">
         <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[#3C6E71]/10 text-[#3C6E71]">
+          <div className="p-2.5 rounded-lg bg-[#3C6E71]/10 text-[#3C6E71] shrink-0">
             <Truck className="w-5 h-5" />
           </div>
           <div>
@@ -22,7 +22,7 @@ export default function PromoBanner() {
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[#3C6E71]/10 text-[#3C6E71]">
+          <div className="p-2.5 rounded-lg bg-[#3C6E71]/10 text-[#3C6E71] shrink-0">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
@@ -32,17 +32,17 @@ export default function PromoBanner() {
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[#B85C38]/10 text-[#B85C38]">
+          <div className="p-2.5 rounded-lg bg-[#B85C38]/10 text-[#B85C38] shrink-0">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
             <h4 className="font-display text-xs font-bold uppercase text-[#1C2321]">Hasta 6 Cuotas</h4>
-            <p className="text-[11px] text-gray-500 font-sans">Sin interés con todas las tarjetas</p>
+            <p className="text-[11px] text-gray-500 font-sans">Sin interés con tarjetas</p>
           </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37]">
+          <div className="p-2.5 rounded-lg bg-[#D4AF37]/10 text-[#D4AF37] shrink-0">
             <Gift className="w-5 h-5" />
           </div>
           <div>
