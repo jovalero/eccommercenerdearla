@@ -77,36 +77,28 @@ export default function Header({ searchQuery = "", setSearchQuery, onSelectCateg
             </Link>
           </div>
 
-          {/* Center Navigation Links (Official Holux Style with Dedicated /catalogo Route) */}
+          {/* Center Navigation Links */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-display font-bold uppercase tracking-wider text-gray-200">
             <Link
               href="/catalogo"
               onClick={() => onSelectCategory && onSelectCategory("Todos")}
-              className="hover:text-[#3C6E71] transition-colors py-2 flex items-center gap-1"
+              className="hover:text-[#3C6E71] transition-colors py-2"
             >
-              <span>CATÁLOGO</span>
-              <span className="text-[9px] bg-[#3C6E71]/30 text-[#ECD88C] px-1.5 py-0.5 rounded font-sans lowercase">nuevo</span>
+              CATÁLOGO
             </Link>
             <Link
-              href="/catalogo?marca=Xerjoff"
-              onClick={() => onSelectCategory && onSelectCategory("Xerjoff")}
+              href="/catalogo?genero=Hombre"
+              onClick={() => onSelectCategory && onSelectCategory("Hombre")}
               className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
             >
-              XERJOFF NICHE
+              HOMBRE
             </Link>
             <Link
-              href="/catalogo?marca=Tom%20Ford"
-              onClick={() => onSelectCategory && onSelectCategory("Tom Ford")}
+              href="/catalogo?genero=Mujer"
+              onClick={() => onSelectCategory && onSelectCategory("Mujer")}
               className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
             >
-              TOM FORD
-            </Link>
-            <Link
-              href="/catalogo?marca=Creed"
-              onClick={() => onSelectCategory && onSelectCategory("Creed")}
-              className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
-            >
-              CREED
+              MUJER
             </Link>
 
             {/* Special Lucky Wheel Tab */}
@@ -202,37 +194,27 @@ export default function Header({ searchQuery = "", setSearchQuery, onSelectCateg
               }}
               className="block px-3 py-2 rounded-lg hover:bg-white/10"
             >
-              Catálogo Completo
+              Catálogo
             </Link>
             <Link
-              href="/catalogo?marca=Xerjoff"
+              href="/catalogo?genero=Hombre"
               onClick={() => {
-                onSelectCategory && onSelectCategory("Xerjoff");
+                onSelectCategory && onSelectCategory("Hombre");
                 setMobileMenuOpen(false);
               }}
               className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
-              Xerjoff Niche
+              Hombre
             </Link>
             <Link
-              href="/catalogo?marca=Tom%20Ford"
+              href="/catalogo?genero=Mujer"
               onClick={() => {
-                onSelectCategory && onSelectCategory("Tom Ford");
+                onSelectCategory && onSelectCategory("Mujer");
                 setMobileMenuOpen(false);
               }}
               className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
-              Tom Ford
-            </Link>
-            <Link
-              href="/catalogo?marca=Creed"
-              onClick={() => {
-                onSelectCategory && onSelectCategory("Creed");
-                setMobileMenuOpen(false);
-              }}
-              className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
-            >
-              Creed
+              Mujer
             </Link>
             <button
               type="button"

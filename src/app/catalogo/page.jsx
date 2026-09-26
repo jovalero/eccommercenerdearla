@@ -16,7 +16,7 @@ import {
   Sparkles, 
   Percent, 
   Award,
-  Layers
+  Users
 } from "lucide-react";
 import InteractiveTicker from "../../components/InteractiveTicker";
 import Header from "../../components/Header";
@@ -29,11 +29,13 @@ function CatalogContent() {
 
   // URL search params initialization
   const initialBrandParam = searchParams.get("marca") || searchParams.get("brand") || "Todos";
+  const initialGenderParam = searchParams.get("genero") || searchParams.get("gender") || "Todos";
   const initialQueryParam = searchParams.get("q") || "";
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState(initialQueryParam);
   const [selectedBrand, setSelectedBrand] = useState(initialBrandParam);
+  const [selectedGender, setSelectedGender] = useState(initialGenderParam);
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [priceMax, setPriceMax] = useState(550000);
   const [onlyHighPoints, setOnlyHighPoints] = useState(false);
@@ -46,6 +48,8 @@ function CatalogContent() {
   useEffect(() => {
     const brand = searchParams.get("marca") || searchParams.get("brand");
     if (brand) setSelectedBrand(brand);
+    const genero = searchParams.get("genero") || searchParams.get("gender");
+    if (genero) setSelectedGender(genero);
     const q = searchParams.get("q");
     if (q) setSearchQuery(q);
   }, [searchParams]);
@@ -62,7 +66,7 @@ function CatalogContent() {
   const uniqueBrands = ["Todos", "Xerjoff", "Tom Ford", "Nishane", "Montale", "Paris Corner", "Creed"];
 
   // Available categories
-  const categories = ["Todas", "Nicho Italiano", "Lujo Americano", "Nicho Turco", "Lujo Francés", "Joya Oriental"];
+  const categories = ["Todas", "Nicho Italiano", "Lujo Americano", "Nicho Turco", "Nicho Parisino", "Gourmand Oriental"];
 
   // Popular olfactory notes
   const popularNotes = [
@@ -77,33 +81,48 @@ function CatalogContent() {
     "Miel pura",
     "Coco cremoso",
     "Pistacho",
-    "Rosa de Damasco"
+    "Rosa aterciopelada"
   ];
 
   // Filtering Logic
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((product) => {
-      // 1. Brand filter
+      // 1. Gender filter
+      if (selectedGender !== "Todos") {
+        const g = selectedGender.toLowerCase();
+        const prodG = (product.gender || "").toLowerCase();
+        if (g === "hombre" && prodG !== "hombre" && prodG !== "unisex") {
+          return false;
+        }
+        if (g === "mujer" && prodG !== "mujer" && prodG !== "unisex") {
+          return false;
+        }
+        if (g === "unisex" && prodG !== "unisex") {
+          return false;
+        }
+      }
+
+      // 2. Brand filter
       if (selectedBrand !== "Todos" && product.brand.toLowerCase() !== selectedBrand.toLowerCase()) {
         return false;
       }
 
-      // 2. Category filter
+      // 3. Category filter
       if (selectedCategory !== "Todas" && product.category.toLowerCase() !== selectedCategory.toLowerCase()) {
         return false;
       }
 
-      // 3. Price filter
+      // 4. Price filter
       if (product.price > priceMax) {
         return false;
       }
 
-      // 4. Benefit toggles
+      // 5. Benefit toggles
       if (onlyHighPoints && product.pointsReward < 4000) {
         return false;
       }
 
-      // 5. Olfactory note filter
+      // 6. Olfactory note filter
       if (selectedNote) {
         const allNotes = [
           ...product.olfactoryPyramid.top,
@@ -115,7 +134,7 @@ function CatalogContent() {
         }
       }
 
-      // 6. Search query
+      // 7. Search query
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const allNotes = [
@@ -137,7 +156,7 @@ function CatalogContent() {
 
       return true;
     });
-  }, [selectedBrand, selectedCategory, priceMax, onlyHighPoints, selectedNote, searchQuery]);
+  }, [selectedGender, selectedBrand, selectedCategory, priceMax, onlyHighPoints, selectedNote, searchQuery]);
 
   // Sorting Logic
   const sortedProducts = useMemo(() => {
@@ -162,6 +181,7 @@ function CatalogContent() {
   // Count active filters
   const activeFiltersCount = useMemo(() => {
     let count = 0;
+    if (selectedGender !== "Todos") count++;
     if (selectedBrand !== "Todos") count++;
     if (selectedCategory !== "Todas") count++;
     if (priceMax < 550000) count++;
@@ -169,9 +189,10 @@ function CatalogContent() {
     if (selectedNote) count++;
     if (searchQuery.trim()) count++;
     return count;
-  }, [selectedBrand, selectedCategory, priceMax, onlyHighPoints, selectedNote, searchQuery]);
+  }, [selectedGender, selectedBrand, selectedCategory, priceMax, onlyHighPoints, selectedNote, searchQuery]);
 
   const handleResetFilters = () => {
+    setSelectedGender("Todos");
     setSelectedBrand("Todos");
     setSelectedCategory("Todas");
     setPriceMax(550000);
@@ -198,11 +219,19 @@ function CatalogContent() {
               <span>Inicio</span>
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-            <span className="font-bold text-gray-900">Catálogo de Fragancias</span>
+            <Link href="/catalogo" onClick={handleResetFilters} className="font-bold text-gray-900 hover:text-[#3C6E71]">
+              Catálogo de Fragancias
+            </Link>
+            {selectedGender !== "Todos" && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+                <span className="text-[#3C6E71] font-bold">Colección: {selectedGender}</span>
+              </>
+            )}
             {selectedBrand !== "Todos" && (
               <>
                 <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-                <span className="text-[#3C6E71] font-bold">{selectedBrand}</span>
+                <span className="text-gray-700 font-bold">{selectedBrand}</span>
               </>
             )}
             {selectedNote && (
@@ -235,7 +264,7 @@ function CatalogContent() {
               CATÁLOGO DE <span className="text-[#3C6E71]">ELIXIRES DE AUTOR</span>
             </h1>
             <p className="font-sans text-xs sm:text-sm text-gray-300 max-w-2xl leading-relaxed">
-              Explora nuestra colección selecta de fragancias de nicho italianas, francesas y orientales. Acordes embotellados en concentración pura con envío asegurado y recompensa de puntos VIP.
+              Explora nuestra colección selecta de fragancias para hombre, mujer y unisex. Acordes embotellados en concentración pura con envío asegurado y recompensa de puntos VIP.
             </p>
           </div>
 
@@ -267,6 +296,16 @@ function CatalogContent() {
                 <span className="text-xs bg-[#3C6E71]/15 text-[#3C6E71] font-bold px-2 py-0.5 rounded-full font-sans">
                   {activeFiltersCount} {activeFiltersCount === 1 ? "filtro activo" : "filtros activos"}
                 </span>
+
+                {selectedGender !== "Todos" && (
+                  <button
+                    onClick={() => setSelectedGender("Todos")}
+                    className="text-xs bg-[#3C6E71] text-white px-2 py-0.5 rounded-full flex items-center gap-1 font-sans cursor-pointer transition-colors"
+                  >
+                    <span>Para: {selectedGender}</span>
+                    <X className="w-3 h-3 text-white" />
+                  </button>
+                )}
 
                 {selectedBrand !== "Todos" && (
                   <button
@@ -426,8 +465,34 @@ function CatalogContent() {
                 </div>
               </div>
 
-              {/* 2. Brand Filter */}
-              <div className="space-y-2">
+              {/* 2. Gender / Collection Filter */}
+              <div className="space-y-2 pt-2 border-t border-gray-100">
+                <label className="text-xs font-bold text-gray-700 uppercase font-sans tracking-wide block">
+                  Colección / Género
+                </label>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {["Todos", "Hombre", "Mujer", "Unisex"].map((gen) => {
+                    const isSelected = selectedGender.toLowerCase() === gen.toLowerCase();
+                    return (
+                      <button
+                        key={gen}
+                        type="button"
+                        onClick={() => setSelectedGender(gen)}
+                        className={`py-2 px-3 rounded-xl text-xs font-sans font-bold transition-all text-center cursor-pointer ${
+                          isSelected
+                            ? "bg-[#3C6E71] text-white shadow-xs"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                      >
+                        {gen}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. Brand Filter */}
+              <div className="space-y-2 pt-2 border-t border-gray-100">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-gray-700 uppercase font-sans tracking-wide">
                     Marcas de Autor
@@ -463,7 +528,7 @@ function CatalogContent() {
                 </div>
               </div>
 
-              {/* 3. Category Filter */}
+              {/* 4. Category Filter */}
               <div className="space-y-2 pt-2 border-t border-gray-100">
                 <label className="text-xs font-bold text-gray-700 uppercase font-sans tracking-wide block">
                   Categoría Olfativa
@@ -489,7 +554,7 @@ function CatalogContent() {
                 </div>
               </div>
 
-              {/* 4. Interactive Price Range Slider */}
+              {/* 5. Interactive Price Range Slider */}
               <div className="space-y-2 pt-2 border-t border-gray-100">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-gray-700 uppercase font-sans tracking-wide">
@@ -514,7 +579,7 @@ function CatalogContent() {
                 </div>
               </div>
 
-              {/* 5. Olfactory Notes Pills */}
+              {/* 6. Olfactory Notes Pills */}
               <div className="space-y-2 pt-2 border-t border-gray-100">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-gray-700 uppercase font-sans tracking-wide">
@@ -550,7 +615,7 @@ function CatalogContent() {
                 </div>
               </div>
 
-              {/* 6. Special VIP Benefit Toggles */}
+              {/* 7. Special VIP Benefit Toggles */}
               <div className="space-y-2 pt-2 border-t border-gray-100">
                 <label className="text-xs font-bold text-gray-700 uppercase font-sans tracking-wide block">
                   Beneficios Club VIP
@@ -590,7 +655,7 @@ function CatalogContent() {
                   No encontramos fragancias con esos filtros
                 </h3>
                 <p className="font-sans text-xs text-gray-500 max-w-xs leading-relaxed">
-                  Intenta ajustar el rango de precio, cambiar la marca seleccionada o remover las notas olfativas filtradas.
+                  Intenta ajustar el género seleccionado, el rango de precio o remover las notas olfativas filtradas.
                 </p>
                 <button
                   type="button"
@@ -631,8 +696,29 @@ function CatalogContent() {
               </button>
             </div>
 
-            {/* Mobile Brand */}
+            {/* Mobile Gender */}
             <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-800 uppercase font-sans">Colección / Género</label>
+              <div className="grid grid-cols-2 gap-1.5">
+                {["Todos", "Hombre", "Mujer", "Unisex"].map((gen) => (
+                  <button
+                    key={gen}
+                    type="button"
+                    onClick={() => setSelectedGender(gen)}
+                    className={`py-2 px-2 rounded-lg text-xs font-sans text-center ${
+                      selectedGender.toLowerCase() === gen.toLowerCase()
+                        ? "bg-[#3C6E71] text-white font-bold"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    {gen}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile Brand */}
+            <div className="space-y-2 border-t border-gray-100 pt-3">
               <label className="text-xs font-bold text-gray-800 uppercase font-sans">Marcas</label>
               <div className="flex flex-wrap gap-1.5">
                 {uniqueBrands.map((brand) => (
@@ -647,27 +733,6 @@ function CatalogContent() {
                     }`}
                   >
                     {brand}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Categories */}
-            <div className="space-y-2 border-t border-gray-100 pt-3">
-              <label className="text-xs font-bold text-gray-800 uppercase font-sans">Categorías</label>
-              <div className="flex flex-wrap gap-1.5">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-sans ${
-                      selectedCategory === cat
-                        ? "bg-[#3C6E71] text-white font-bold"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    {cat}
                   </button>
                 ))}
               </div>
