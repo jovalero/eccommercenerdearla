@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useShop } from "../context/ShopContext";
 import {
   ShoppingBag,
@@ -11,7 +13,8 @@ import {
   X,
 } from "lucide-react";
 
-export default function Header({ searchQuery, setSearchQuery, onSelectCategory }) {
+export default function Header({ searchQuery = "", setSearchQuery, onSelectCategory }) {
+  const router = useRouter();
   const {
     cartCount,
     setIsCartOpen,
@@ -22,6 +25,25 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
   } = useShop();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [localSearch, setLocalSearch] = useState(searchQuery);
+
+  const handleSearchChange = (val) => {
+    setLocalSearch(val);
+    if (setSearchQuery) {
+      setSearchQuery(val);
+    }
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      const q = (localSearch || "").trim();
+      if (q) {
+        router.push(`/catalogo?q=${encodeURIComponent(q)}`);
+      } else {
+        router.push("/catalogo");
+      }
+    }
+  };
 
   return (
     <header className="bg-[#1C2321] text-white border-b border-[#3C6E71]/20 shadow-md transition-all">
@@ -38,7 +60,7 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
               {mobileMenuOpen ? <X className="w-5 h-5 text-[#F2EFE9]" /> : <Menu className="w-5 h-5 text-[#F2EFE9]" />}
             </button>
 
-            <a href="#" className="flex items-center gap-3 select-none group">
+            <Link href="/" className="flex items-center gap-3 select-none group">
               <img
                 src="/holuxlogo.png"
                 alt="HOLUX"
@@ -52,41 +74,46 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
                   Haute Parfumerie
                 </span>
               </div>
-            </a>
+            </Link>
           </div>
 
-          {/* Center Navigation Links (Original Holux Style) */}
+          {/* Center Navigation Links (Official Holux Style with Dedicated /catalogo Route) */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-display font-bold uppercase tracking-wider text-gray-200">
-            <a
-              href="#catalogo"
+            <Link
+              href="/catalogo"
               onClick={() => onSelectCategory && onSelectCategory("Todos")}
-              className="hover:text-[#3C6E71] transition-colors py-2"
+              className="hover:text-[#3C6E71] transition-colors py-2 flex items-center gap-1"
             >
-              CATÁLOGO
-            </a>
-            <button
+              <span>CATÁLOGO</span>
+              <span className="text-[9px] bg-[#3C6E71]/30 text-[#ECD88C] px-1.5 py-0.5 rounded font-sans lowercase">nuevo</span>
+            </Link>
+            <Link
+              href="/catalogo?marca=Xerjoff"
               onClick={() => onSelectCategory && onSelectCategory("Xerjoff")}
-              className="hover:text-[#3C6E71] transition-colors py-2 cursor-pointer uppercase"
+              className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
             >
               XERJOFF NICHE
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/catalogo?marca=Tom%20Ford"
               onClick={() => onSelectCategory && onSelectCategory("Tom Ford")}
-              className="hover:text-[#3C6E71] transition-colors py-2 cursor-pointer uppercase"
+              className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
             >
               TOM FORD
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/catalogo?marca=Creed"
               onClick={() => onSelectCategory && onSelectCategory("Creed")}
-              className="hover:text-[#3C6E71] transition-colors py-2 cursor-pointer uppercase"
+              className="hover:text-[#3C6E71] transition-colors py-2 uppercase"
             >
               CREED
-            </button>
+            </Link>
 
             {/* Special Lucky Wheel Tab */}
             <button
+              type="button"
               onClick={() => setIsWheelOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#B85C38] text-white hover:bg-[#a04e2e] shadow-sm hover:scale-105 transition-all text-xs font-bold"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#B85C38] text-white hover:bg-[#a04e2e] shadow-sm hover:scale-105 transition-all text-xs font-bold cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '6s' }} />
               <span>RULETA VIP 🎡</span>
@@ -98,15 +125,17 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
             <div className="relative w-full">
               <input
                 type="text"
-                placeholder="Buscar fragancias, notas o marcas..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/10 border border-[#3C6E71]/40 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-gray-400 outline-none focus:border-[#3C6E71] focus:ring-1 focus:ring-[#3C6E71]/40 transition-all font-sans"
+                placeholder="Buscar fragancias, notas o marcas (Enter)..."
+                value={localSearch}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                className="w-full bg-white/10 border border-[#3C6E71]/40 rounded-full pl-9 pr-8 py-2 text-xs text-white placeholder-gray-400 outline-none focus:border-[#3C6E71] focus:ring-1 focus:ring-[#3C6E71]/40 transition-all font-sans"
               />
               <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5" />
-              {searchQuery && (
+              {localSearch && (
                 <button
-                  onClick={() => setSearchQuery("")}
+                  type="button"
+                  onClick={() => handleSearchChange("")}
                   className="absolute right-3 top-2 text-xs text-gray-400 hover:text-white"
                 >
                   ✕
@@ -152,9 +181,10 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
           <div className="relative w-full">
             <input
               type="text"
-              placeholder="Buscar fragancias, notas o marcas..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar fragancias, notas o marcas (Enter)..."
+              value={localSearch}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
               className="w-full bg-white/10 border border-[#3C6E71]/40 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-gray-400 outline-none focus:border-[#3C6E71] font-sans"
             />
             <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-2.5" />
@@ -164,8 +194,8 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
         {/* Mobile Dropdown Navigation */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-white/10 space-y-2 font-display text-sm font-bold uppercase tracking-wider">
-            <a
-              href="#catalogo"
+            <Link
+              href="/catalogo"
               onClick={() => {
                 onSelectCategory && onSelectCategory("Todos");
                 setMobileMenuOpen(false);
@@ -173,31 +203,44 @@ export default function Header({ searchQuery, setSearchQuery, onSelectCategory }
               className="block px-3 py-2 rounded-lg hover:bg-white/10"
             >
               Catálogo Completo
-            </a>
-            <button
+            </Link>
+            <Link
+              href="/catalogo?marca=Xerjoff"
               onClick={() => {
                 onSelectCategory && onSelectCategory("Xerjoff");
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
+              className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
               Xerjoff Niche
-            </button>
-            <button
+            </Link>
+            <Link
+              href="/catalogo?marca=Tom%20Ford"
               onClick={() => {
                 onSelectCategory && onSelectCategory("Tom Ford");
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
+              className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
             >
               Tom Ford
-            </button>
+            </Link>
+            <Link
+              href="/catalogo?marca=Creed"
+              onClick={() => {
+                onSelectCategory && onSelectCategory("Creed");
+                setMobileMenuOpen(false);
+              }}
+              className="block px-3 py-2 rounded-lg hover:bg-white/10 uppercase"
+            >
+              Creed
+            </Link>
             <button
+              type="button"
               onClick={() => {
                 setIsWheelOpen(true);
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left px-3 py-2 rounded-lg bg-[#B85C38] text-white flex items-center justify-between"
+              className="w-full text-left px-3 py-2 rounded-lg bg-[#B85C38] text-white flex items-center justify-between cursor-pointer"
             >
               <span>Ruleta de la Fortuna Holux 🎡</span>
               <span className="text-xs bg-black/20 px-2 py-0.5 rounded-full">{spinsLeft} giros</span>

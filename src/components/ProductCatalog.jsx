@@ -107,6 +107,17 @@ export default function ProductCatalog({ searchQuery, selectedBrand, setSelected
           </button>
         </div>
       )}
+
+      {/* Link to Full Dynamic Catalog with Advanced Filters */}
+      <div className="mt-12 text-center">
+        <a
+          href="/catalogo"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-[#1C2321] text-white hover:bg-[#3C6E71] transition-all font-display font-bold text-xs sm:text-sm tracking-wider uppercase shadow-md hover:scale-[1.01]"
+        >
+          <span>EXPLORAR CATÁLOGO COMPLETO & FILTROS AVANZADOS</span>
+          <span className="text-[#ECD88C]">→</span>
+        </a>
+      </div>
     </section>
   );
 }
